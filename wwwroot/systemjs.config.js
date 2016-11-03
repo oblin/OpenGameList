@@ -3,7 +3,7 @@
     var map = {
         'app': 'app',              // our application files
         '@angular': 'js/@angular', // angular2 packages
-        'rxjs': 'js/rxjs'          // Rxjs package
+        'rxjs': 'js/rxjs'          // Rxjs package,
     };
     // packages tells the System loader which filename and/or extensions to
     // look for by default (when none are specified)

@@ -5,8 +5,8 @@ import { ItemService } from './item.service';
 
 @Component({
     selector: 'item-detail-view',
-    templateUrl: './app/item-detail-view.component.html',
-    styleUrls: ['./app/item-detail.component.css']
+    templateUrl: './template/item-detail-view.component.html',
+    styleUrls: ['./css/item-detail.component.css']
 })
 export class ItemDetailViewComponent implements OnInit {
     item: Item;
