@@ -1,6 +1,47 @@
 @color-latest: #5a4d74;
 @color-most-viewed: #4d6552;
 @color-random: #703535;
+@color-panel: #f9f9f9;
+
+.item-container {
+    margin: 0 20px;
+    .nav.nav-tabs {
+        padding-right: 20px;
+        li {
+            &.active a {
+                font-weight: bold;
+                background-color: @color-panel;
+            }
+            float:right;
+        }
+    }
+    .panel.panel-default {
+        background-color: @color-panel;
+        border-top-width: 0;
+        .item-image-panel {
+            width: 170px;
+            min-height: 170px;
+            float: right;
+            padding: 10px;
+            background-color: #f2f2f2;
+            border: 1px solid #cccccc;
+            img {
+                width: 150px;
+                height: 150px;
+                border: 1px solid #e6e6e6;
+            }
+            .caption {
+                margin-top: 5px;
+                text-align: center;
+                font-size: 0.8em;
+            }
+        }
+        h3 {
+            margin: 10px 0 20px 0;
+            font-weight: bold;
+        }
+    }
+}
 
 item-list {
     border: 0;
@@ -67,6 +108,36 @@ item-list {
     }
 }
 
+form.item-detail-edit {
+    .empty-field {
+        color: #f04124;
+    }
+    .form-group {
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            display: block;
+            background-color: #eaeaea;
+            line-height: 1.4em;
+            padding: 5px 10px;
+        }
+        textarea {
+            &#input-description {
+                height: 80px;
+            }
+            &#input-text {
+                height: 150px;
+            }
+        }
+    }
+    .commands {
+        text-align: right;
+        input[type="button"] {
+            margin-left: 5px;
+        }
+    }
+}
+
 h1.header {
     font-size: 40px;
     margin: 46px 0 0 0;
@@ -106,4 +177,14 @@ h2 {
     line-height: 1.4em;
     font-style: italic;
     color: #666666;
+}
+
+.empty-field {
+    color: #f04124;
+    font-weight: normal;
+    font-style: italic;
+}
+
+[hidden] {
+  display: none !important;
 }

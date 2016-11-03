@@ -10,7 +10,7 @@
         "spec": ">=3.1.2 <3.2.0",
         "type": "range"
       },
-      "F:\\Working\\OpenGameList\\src\\OpenGameList"
+      "C:\\Users\\yimin\\Source\\Repos\\OpenGameList"
     ]
   ],
   "_from": "@angular/router@>=3.1.2 <3.2.0",
@@ -45,7 +45,7 @@
   "_shasum": "1046c943ace795027e2e5057df8c897da968fcd6",
   "_shrinkwrap": null,
   "_spec": "@angular/router@~3.1.2",
-  "_where": "F:\\Working\\OpenGameList\\src\\OpenGameList",
+  "_where": "C:\\Users\\yimin\\Source\\Repos\\OpenGameList",
   "author": {
     "name": "angular"
   },
