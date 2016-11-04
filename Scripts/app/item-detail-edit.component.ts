@@ -37,7 +37,7 @@ import { ItemService } from './item.service';
             </div>
         </div>
     `,
-    styleUrls: ['./app/item-detail.component.css']
+    styleUrls: ['./css/item-detail.component.css']
 })
 export class ItemDetailEditComponent implements OnInit {
     item: Item;

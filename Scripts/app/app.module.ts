@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import 'rxjs/Rx';
 
@@ -16,6 +16,9 @@ import { HomeComponent } from './home.component';
 import { LoginComponent } from './login.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { AppRouting } from './app.routing';
+
+import { MenubarModule, MenuModule, TabViewModule, MessagesModule,
+    GrowlModule, InputTextModule, PanelModule } from 'primeng/primeng';
 
 @NgModule({
     declarations: [
@@ -31,9 +34,11 @@ import { AppRouting } from './app.routing';
     imports: [
         BrowserModule,
         HttpModule,
-        FormsModule,
+        FormsModule, ReactiveFormsModule,
         RouterModule,
-        AppRouting
+        AppRouting,
+        // for primeng modules
+        MenubarModule, MenuModule, TabViewModule, MessagesModule, GrowlModule, InputTextModule, PanelModule
     ],
     providers: [ItemService],
     bootstrap: [AppComponent]

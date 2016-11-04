@@ -1,15 +1,17 @@
 ﻿(function (global) {
     // map tells the System loader where to look for things
     var map = {
-        'app': 'app',              // our application files
-        '@angular': 'js/@angular', // angular2 packages
-        'rxjs': 'js/rxjs'          // Rxjs package
+        'app'     : 'app',          // our application files
+        '@angular': 'js/@angular',  // angular2 packages
+        'rxjs'    : 'js/rxjs',      // Rxjs package
+        'primeng' : 'js/primeng'
     };
     // packages tells the System loader which filename and/or extensions to
     // look for by default (when none are specified)
     var packages = {
         'app': { main: 'main.js', defaultExtension: 'js' },
-        'rxjs': { defaultExtension: 'js' }
+        'rxjs': { defaultExtension: 'js' },
+        'primeng': { defaultExtension: 'js' }
     };
     // configure @angular packages
     var ngPackageNames = [

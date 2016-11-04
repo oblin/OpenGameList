@@ -1,6 +1,7 @@
 ﻿var gulp = require('gulp'),
     gp_clean = require('gulp-clean'),
     gp_concat = require('gulp-concat'),
+    gp_less = require('gulp-less'),
     gp_sourcemaps = require('gulp-sourcemaps'),
     gp_typescript = require('gulp-typescript'),
     gp_uglify = require('gulp-uglify');
@@ -13,8 +14,14 @@ var srcPaths = {
     template: [
         'Scripts/app/*.html',
         'Scripts/app/**/*.html',
-        'Scripts/app/*.css',
-        'Scripts/app/**/*.css'
+    ],
+    less: [
+        'Scripts/less/**/*.less',
+    ],
+    css: [
+        'node_modules/font-awesome/css/font-awesome.min.css',
+        'node_modules/primeng/resources/themes/omega/theme.css',
+        'node_modules/primeng/resources/primeng.min.css'
     ],
     js: [
         'Scripts/js/**/*.js',
@@ -27,18 +34,24 @@ var srcPaths = {
     js_angular: [
         'node_modules/@angular/**'
     ],
+    js_primeng: [
+        'node_modules/primeng/**'
+    ],
     js_rxjs: [
         'node_modules/rxjs/**'
     ]
 };
 var destPaths = {
-    app: 'wwwroot/app/',
-    js: 'wwwroot/js/',
+    app       : 'wwwroot/app/',
+    css       : 'wwwroot/css/',
+    template  : 'wwwroot/template/',
+    js        : 'wwwroot/js/',
     js_angular: 'wwwroot/js/@angular/',
-    js_rxjs: 'wwwroot/js/rxjs/'
+    js_rxjs   : 'wwwroot/js/rxjs/',
+    js_primeng: 'wwwroot/js/primeng'
 };
 // Compile, minify and create sourcemaps all TypeScript files and place them to wwwroot/app, together with their js.map files.
-gulp.task('app', function () {
+gulp.task('app', ['app_clean'], function () {
     return gulp.src(srcPaths.app)
         .pipe(gp_sourcemaps.init())
         .pipe(gp_typescript(require('./tsconfig.json').compilerOptions))
@@ -55,10 +68,18 @@ gulp.task('app_clean', function () {
 gulp.task('js', function () {
     gulp.src(srcPaths.js_angular).pipe(gulp.dest(destPaths.js_angular));
     gulp.src(srcPaths.js_rxjs).pipe(gulp.dest(destPaths.js_rxjs));
+    gulp.src(srcPaths.js_primeng).pipe(gulp.dest(destPaths.js_primeng));
     return gulp.src(srcPaths.js)
         // .pipe(gp_uglify({ mangle: false })) // disable uglify
         // .pipe(gp_concat('all-js.min.js')) // disable concat
         .pipe(gulp.dest(destPaths.js));
+});
+
+gulp.task('css', function () {
+    return gulp.src(srcPaths.css)
+        // .pipe(gp_uglify({ mangle: false })) // disable uglify
+        // .pipe(gp_concat('all-js.min.js')) // disable concat
+        .pipe(gulp.dest(destPaths.css));
 });
 
 // Global cleanup task
@@ -69,13 +90,31 @@ gulp.task('js_clean', function () {
     .pipe(gp_clean({ force: true }));
 });
 
-gulp.task('template', function() {
-    return gulp.src(srcPaths.template).pipe(gulp.dest(destPaths.app));
+gulp.task('less', ['less_clean'], function() {
+    return gulp.src(srcPaths.less)
+        .pipe(gp_less())
+        .pipe(gulp.dest(destPaths.css));
+});
+
+gulp.task('less_clean', function() {
+    // return gulp.src(destPaths.css + "*.*", { read: false })
+    //     .pipe(gp_clean({ force: true }));
+});
+
+gulp.task('template', ['template_clean'], function() {
+    return gulp.src(srcPaths.template).pipe(gulp.dest(destPaths.template));
 })
+
+gulp.task('template_clean', function() {
+    return gulp.src(destPaths.template + "*.*", { read: false })
+        .pipe(gp_clean({ force: true }));
+})
+
 // Watch specified files and define what to do upon file changes
 gulp.task('watch', function () {
-    gulp.watch([srcPaths.app, srcPaths.template, srcPaths.js], ['app', 'template', 'js']);
+    gulp.watch([srcPaths.app, srcPaths.template, srcPaths.less, srcPaths.js, srcPaths.css], 
+        ['app', 'template', 'less', 'js', 'css']);
 });
 
 // Define the default task so it will launch all other tasks
-gulp.task('default', ['app', 'template', 'js', 'watch']);
+gulp.task('default', ['app', 'template', 'less', 'js', 'css', 'watch']);

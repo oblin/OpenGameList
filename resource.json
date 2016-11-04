@@ -1,0 +1,11 @@
+{
+  "css": {
+    "site": [
+      "node_modules/primeng/resources/primeng.css",
+      "node_modules/font-awesome/css/font-awesome.css"
+    ],
+    "style": [
+      "wwwroot/css/style.css"
+    ]
+  }
+}
