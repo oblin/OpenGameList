@@ -8,28 +8,25 @@ using OpenGameList.Data;
 namespace OpenGameList.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161104153202_Identity with role")]
+    partial class Identitywithrole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnName("id");
+                    b.Property<string>("Id");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnName("concurrency_stamp");
+                        .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasColumnName("name")
                         .HasAnnotation("MaxLength", 256);
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnName("normalized_name")
                         .HasAnnotation("MaxLength", 256);
 
                     b.HasKey("Id");
@@ -37,7 +34,7 @@ namespace OpenGameList.Data.Migrations
                     b.HasIndex("NormalizedName")
                         .HasName("RoleNameIndex");
 
-                    b.ToTable("roles");
+                    b.ToTable("AspNetRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
@@ -98,11 +95,9 @@ namespace OpenGameList.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserRole<string>", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnName("user_id");
+                    b.Property<string>("UserId");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnName("role_id");
+                    b.Property<string>("RoleId");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -110,7 +105,7 @@ namespace OpenGameList.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("user_roles");
+                    b.ToTable("AspNetUserRoles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityUserToken<string>", b =>
@@ -133,12 +128,10 @@ namespace OpenGameList.Data.Migrations
                     b.Property<string>("Id")
                         .HasColumnName("id");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnName("access_failed_count");
+                    b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnName("concurrency_stamp");
+                        .IsConcurrencyToken();
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnName("created_date");
@@ -150,8 +143,7 @@ namespace OpenGameList.Data.Migrations
                         .HasColumnName("email")
                         .HasAnnotation("MaxLength", 256);
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnName("email_confirmed");
+                    b.Property<bool>("EmailConfirmed");
 
                     b.Property<int>("Flags")
                         .HasColumnName("flags");
@@ -159,37 +151,28 @@ namespace OpenGameList.Data.Migrations
                     b.Property<DateTime>("LastModifiedDate")
                         .HasColumnName("last_modified_date");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnName("lockout_enabled");
+                    b.Property<bool>("LockoutEnabled");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnName("lockout_end");
+                    b.Property<DateTimeOffset?>("LockoutEnd");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnName("normalized_email")
                         .HasAnnotation("MaxLength", 256);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnName("normalized_user_name")
                         .HasAnnotation("MaxLength", 256);
 
                     b.Property<string>("Notes")
                         .HasColumnName("notes");
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnName("password_hash");
+                    b.Property<string>("PasswordHash");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnName("phone_number");
+                    b.Property<string>("PhoneNumber");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnName("phone_number_confirmed");
+                    b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnName("security_stamp");
+                    b.Property<string>("SecurityStamp");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnName("two_factor_enabled");
+                    b.Property<bool>("TwoFactorEnabled");
 
                     b.Property<int>("Type")
                         .HasColumnName("type");

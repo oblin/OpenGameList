@@ -3,21 +3,30 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace OpenGameList.Data
 {
     public class DbSeeder
     {
         private ApplicationDbContext _dbContext;
-        public DbSeeder(ApplicationDbContext dbContext)
+        private RoleManager<IdentityRole> _roleManager;
+        private UserManager<ApplicationUser> _userManager;
+
+        public DbSeeder(ApplicationDbContext dbContext,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
+            _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public async Task SeedAsync()
         {
             _dbContext.Database.EnsureCreated();
-            if (await _dbContext.Users.CountAsync() == 0) CreateUsers();
+            if (await _dbContext.Users.CountAsync() == 0) await CreateUsers();
             if (await _dbContext.Items.CountAsync() == 0) CreateItems();
         }
 
@@ -138,10 +147,19 @@ namespace OpenGameList.Data
             _dbContext.SaveChanges();
         }
 
-        private void CreateUsers()
+        private async Task CreateUsers()
         {
             DateTime createdDate = new DateTime(2016, 03, 01, 12, 30, 00);
             DateTime lastModifiedDate = DateTime.Now;
+            const string roleAdministrators = "Administrators";
+            const string roleRegistered = "Registerd";
+
+            // Create Role (if they doesn't exist yet)
+            if (!await _roleManager.RoleExistsAsync(roleAdministrators))
+                await _roleManager.CreateAsync(new IdentityRole(roleAdministrators));
+            if (!await _roleManager.RoleExistsAsync(roleRegistered))
+                await _roleManager.CreateAsync(new IdentityRole(roleRegistered));
+
             // Create the "Admin" ApplicationUser account (if it doesn't exist already)
             var user_Admin = new ApplicationUser()
             {
@@ -151,8 +169,15 @@ namespace OpenGameList.Data
                 CreatedDate = createdDate,
                 LastModifiedDate = lastModifiedDate
             };
-            // Insert "Admin" into the Database
-            _dbContext.Users.Add(user_Admin);
+            // Insert "Admin" applicationuser with role into the Database 
+            if (await _userManager.FindByIdAsync(user_Admin.Id) == null)
+            {
+                await _userManager.CreateAsync(user_Admin, "Pass4Admin");
+                await _userManager.AddToRoleAsync(user_Admin, roleAdministrators);
+                // Remove Lockout and E-mail confirmation
+                user_Admin.EmailConfirmed = true;
+                user_Admin.LockoutEnabled = false;
+            }
 #if DEBUG
             // Create some sample registered user accounts (if they don't exist already)
             var user_Ryan = new ApplicationUser()
@@ -180,9 +205,33 @@ namespace OpenGameList.Data
                 LastModifiedDate = lastModifiedDate
             };
             // Insert sample registered users into the Database
-            _dbContext.Users.AddRange(user_Ryan, user_Solice, user_Vodan);
+            if (await _userManager.FindByIdAsync(user_Ryan.Id) == null)
+            {
+                await _userManager.CreateAsync(user_Ryan, "Pass4Ryan");
+                await _userManager.AddToRoleAsync(user_Ryan, roleRegistered);
+                // Remove Lockout and E-Mail confirmation.
+                user_Ryan.EmailConfirmed = true;
+                user_Ryan.LockoutEnabled = false;
+            }
+            if (await _userManager.FindByIdAsync(user_Solice.Id) == null)
+            {
+                await _userManager.CreateAsync(user_Solice, "Pass4Solice");
+                await _userManager.AddToRoleAsync(user_Solice, roleRegistered);
+                // Remove Lockout and E-Mail confirmation.
+                user_Solice.EmailConfirmed = true;
+                user_Solice.LockoutEnabled = false;
+            }
+            if (await _userManager.FindByIdAsync(user_Vodan.Id) == null)
+            {
+                await _userManager.CreateAsync(user_Vodan, "Pass4Vodan");
+                await _userManager.AddToRoleAsync(user_Vodan, roleRegistered);
+                // Remove Lockout and E-Mail confirmation.
+                user_Vodan.EmailConfirmed = true;
+                user_Vodan.LockoutEnabled = false;
+            }
+
 #endif
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
         }
 
         private Item GetSampleItem(int id, string authorId, int viewCount, DateTime createdDate)
