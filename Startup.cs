@@ -11,6 +11,8 @@ using OpenGameList.Data;
 using OpenGameList.ViewModels;
 using System;
 using System.IO;
+using OpenGameList.Infrastructure;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OpenGameList
 {
@@ -86,6 +88,27 @@ namespace OpenGameList
                         Configuration["StaticFiles:Headers:Pragma"];
                     context.Context.Response.Headers["Expires"] =
                         Configuration["StaticFiles:Headers:Expires"];
+                }
+            });
+
+            // Add a custom Jwt Provider to generate Tokens
+            app.UseJwtProvider();
+            // Add the Jwt Bearer Header Authentication to validate Tokens
+            app.UseJwtBearerAuthentication(new JwtBearerOptions(){
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                RequireHttpsMetadata = false,
+                TokenValidationParameters = new TokenValidationParameters()
+                {
+                    // Basic settings - signing key to validate with, audience and issuer.
+                    IssuerSigningKey = JwtProvider.SecurityKey,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = JwtProvider.Issuer,
+                    ValidateIssuer = true,
+                    ValidateAudience = false,
+                    // // When receiving a token, check that it is still valid.
+                    ValidateLifetime = true,
+                    // ClockSkew = TimeSpan.Zero
                 }
             });
 

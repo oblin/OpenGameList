@@ -7,6 +7,8 @@ using OpenGameList.ViewModels;
 using Newtonsoft.Json;
 using OpenGameList.Data;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,15 +41,14 @@ namespace OpenGameList.Controllers
                 return NotFound(new { Error = $"Item Id {item.Id} has not been found" });
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public IActionResult Add([FromBody]ItemViewModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && model != null)
             {
                 var item = Mapper.Map<Item>(model);
                 item.CreatedDate = item.LastModifiedDate = DateTime.Now;
-                // TODO: replace the following with current user's id
-                item.UserId = _context.Users.FirstOrDefault(u => u.UserName == "Admin").Id;
+                item.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 _context.Items.Add(item);
                 _context.SaveChanges();
 
@@ -57,7 +58,7 @@ namespace OpenGameList.Controllers
             return BadRequest("傳入的資料驗證失敗");
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public IActionResult Update(int id, [FromBody]ItemViewModel model)
         {
             if (ModelState.IsValid && model != null)
@@ -82,7 +83,7 @@ namespace OpenGameList.Controllers
             return NotFound($"Item Id {id} has not been found or validation failed");
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public IActionResult Delete(int id)
         {
             var item = _context.Items.FirstOrDefault(i => i.Id == id);

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Item } from './item';
 import { ItemService } from './item.service';
+import { AuthService } from './auth.service';
 
 @Component({
     selector: 'item-detail-view',
@@ -11,6 +12,7 @@ import { ItemService } from './item.service';
 export class ItemDetailViewComponent implements OnInit {
     item: Item;
     constructor(private itemService: ItemService,
+        private authService: AuthService,
         private router: Router,
         private activatedRoute: ActivatedRoute) { }
 

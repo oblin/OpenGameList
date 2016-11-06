@@ -2,13 +2,16 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import 'rxjs/Rx';
 
+import { ItemService } from './item.service';
+import { AuthService } from './auth.service';
+import { AuthHttp } from './auth.http';
+
 import { AppComponent } from './app.component';
 import { ItemListComponent } from './item-list.component';
-import { ItemService } from './item.service';
 import { ItemDetailEditComponent } from './item-detail-edit.component';
 import { ItemDetailViewComponent } from './item-detail-view.component';
 import { AboutComponent } from './about.component';
@@ -31,11 +34,11 @@ import { AppRouting } from './app.routing';
     imports: [
         BrowserModule,
         HttpModule,
-        FormsModule,
+        FormsModule, ReactiveFormsModule,
         RouterModule,
         AppRouting
     ],
-    providers: [ItemService],
+    providers: [ItemService, AuthService, AuthHttp],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

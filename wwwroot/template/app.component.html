@@ -21,10 +21,19 @@
                 <li [class.active]="isActive(['about'])">
                     <a class="about" [routerLink]="['about']">About</a>
                 </li>
-                <li [class.active]="isActive(['login'])">
+                <li [class.active]="isActive(['login'])" 
+                    *ngIf="!authService.isLoggedIn()">
                     <a class="login" [routerLink]="['login']">Login</a>
                 </li>
-                <li [class.active]="isActive(['item/edit', 0])">
+                <li [class.active]="isActive(['login'])" 
+                    *ngIf="authService.isLoggedIn()">
+                    <a class="login" href="javascript:void(0)"
+                        (click)="logout()">
+                        Logout
+                    </a>
+                </li>
+                <li [class.active]="isActive(['item/edit', 0])"
+                    *ngIf="authService.isLoggedIn()">
                     <a class="add" [routerLink]="['item/edit', 0]">Add New</a>
                 </li>
             </ul>
