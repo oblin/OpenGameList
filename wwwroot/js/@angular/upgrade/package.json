@@ -1,13 +1,22 @@
 {
   "_args": [
     [
-      "@angular/upgrade@~2.1.0",
-      "C:\\Users\\yimin\\Source\\Repos\\OpenGameList\\src\\OpenGameList"
+      {
+        "raw": "@angular/upgrade@~2.1.0",
+        "scope": "@angular",
+        "escapedName": "@angular%2fupgrade",
+        "name": "@angular/upgrade",
+        "rawSpec": "~2.1.0",
+        "spec": ">=2.1.0 <2.2.0",
+        "type": "range"
+      },
+      "F:\\Working\\OpenGameList"
     ]
   ],
-  "_from": "@angular/upgrade@>=2.1.0-0 <2.2.0-0",
+  "_from": "@angular/upgrade@>=2.1.0 <2.2.0",
   "_id": "@angular/upgrade@2.1.2",
   "_inCache": true,
+  "_installable": true,
   "_location": "/@angular/upgrade",
   "_nodeVersion": "6.7.0",
   "_npmOperationalInternal": {
@@ -15,17 +24,18 @@
     "tmp": "tmp/upgrade-2.1.2.tgz_1477593325664_0.03569021844305098"
   },
   "_npmUser": {
-    "email": "angular-core+npm@google.com",
-    "name": "angular"
+    "name": "angular",
+    "email": "angular-core+npm@google.com"
   },
   "_npmVersion": "3.10.3",
   "_phantomChildren": {},
   "_requested": {
-    "name": "@angular/upgrade",
     "raw": "@angular/upgrade@~2.1.0",
-    "rawSpec": "~2.1.0",
     "scope": "@angular",
-    "spec": ">=2.1.0-0 <2.2.0-0",
+    "escapedName": "@angular%2fupgrade",
+    "name": "@angular/upgrade",
+    "rawSpec": "~2.1.0",
+    "spec": ">=2.1.0 <2.2.0",
     "type": "range"
   },
   "_requiredBy": [
@@ -35,7 +45,7 @@
   "_shasum": "fc9423f87fcae418a0ae3b8d56c615d93563d44f",
   "_shrinkwrap": null,
   "_spec": "@angular/upgrade@~2.1.0",
-  "_where": "C:\\Users\\yimin\\Source\\Repos\\OpenGameList\\src\\OpenGameList",
+  "_where": "F:\\Working\\OpenGameList",
   "author": {
     "name": "angular"
   },
@@ -51,7 +61,6 @@
     "tarball": "https://registry.npmjs.org/@angular/upgrade/-/upgrade-2.1.2.tgz"
   },
   "homepage": "https://github.com/angular/angular#readme",
-  "installable": true,
   "license": "MIT",
   "main": "bundles/upgrade.umd.js",
   "maintainers": [
@@ -64,11 +73,12 @@
   "name": "@angular/upgrade",
   "optionalDependencies": {},
   "peerDependencies": {
-    "@angular/compiler": "2.1.2",
     "@angular/core": "2.1.2",
+    "@angular/compiler": "2.1.2",
     "@angular/platform-browser": "2.1.2",
     "@angular/platform-browser-dynamic": "2.1.2"
   },
+  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/angular/angular.git"

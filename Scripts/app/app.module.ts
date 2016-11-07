@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import 'rxjs/Rx';
 
+import { MenubarModule } from 'primeng/primeng';
+
 import { AppComponent } from './app.component';
 import { ItemListComponent } from './item-list.component';
 import { ItemService } from './item.service';
@@ -33,7 +35,8 @@ import { AppRouting } from './app.routing';
         HttpModule,
         FormsModule,
         RouterModule,
-        AppRouting
+        AppRouting,
+        MenubarModule
     ],
     providers: [ItemService],
     bootstrap: [AppComponent]

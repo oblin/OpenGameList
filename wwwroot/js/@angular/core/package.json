@@ -1,13 +1,22 @@
 {
   "_args": [
     [
-      "@angular/core@~2.1.0",
-      "C:\\Users\\yimin\\Source\\Repos\\OpenGameList\\src\\OpenGameList"
+      {
+        "raw": "@angular/core@~2.1.0",
+        "scope": "@angular",
+        "escapedName": "@angular%2fcore",
+        "name": "@angular/core",
+        "rawSpec": "~2.1.0",
+        "spec": ">=2.1.0 <2.2.0",
+        "type": "range"
+      },
+      "F:\\Working\\OpenGameList"
     ]
   ],
-  "_from": "@angular/core@>=2.1.0-0 <2.2.0-0",
+  "_from": "@angular/core@>=2.1.0 <2.2.0",
   "_id": "@angular/core@2.1.2",
   "_inCache": true,
+  "_installable": true,
   "_location": "/@angular/core",
   "_nodeVersion": "6.7.0",
   "_npmOperationalInternal": {
@@ -15,17 +24,18 @@
     "tmp": "tmp/core-2.1.2.tgz_1477593272741_0.5004757556598634"
   },
   "_npmUser": {
-    "email": "angular-core+npm@google.com",
-    "name": "angular"
+    "name": "angular",
+    "email": "angular-core+npm@google.com"
   },
   "_npmVersion": "3.10.3",
   "_phantomChildren": {},
   "_requested": {
-    "name": "@angular/core",
     "raw": "@angular/core@~2.1.0",
-    "rawSpec": "~2.1.0",
     "scope": "@angular",
-    "spec": ">=2.1.0-0 <2.2.0-0",
+    "escapedName": "@angular%2fcore",
+    "name": "@angular/core",
+    "rawSpec": "~2.1.0",
+    "spec": ">=2.1.0 <2.2.0",
     "type": "range"
   },
   "_requiredBy": [
@@ -35,7 +45,7 @@
   "_shasum": "ce39521643f3d97bc5923d5a7aa76604e973dac8",
   "_shrinkwrap": null,
   "_spec": "@angular/core@~2.1.0",
-  "_where": "C:\\Users\\yimin\\Source\\Repos\\OpenGameList\\src\\OpenGameList",
+  "_where": "F:\\Working\\OpenGameList",
   "author": {
     "name": "angular"
   },
@@ -51,7 +61,6 @@
     "tarball": "https://registry.npmjs.org/@angular/core/-/core-2.1.2.tgz"
   },
   "homepage": "https://github.com/angular/angular#readme",
-  "installable": true,
   "license": "MIT",
   "main": "bundles/core.umd.js",
   "maintainers": [
@@ -67,6 +76,7 @@
     "rxjs": "5.0.0-beta.12",
     "zone.js": "^0.6.21"
   },
+  "readme": "ERROR: No README data found!",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/angular/angular.git"
