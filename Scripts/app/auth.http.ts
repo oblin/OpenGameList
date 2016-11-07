@@ -36,7 +36,6 @@ export class AuthHttp {
                     opts.headers = new Headers();
                 }
                 opts.headers.set('Authorization', `Bearer ${auth.access_token}`);
-                // opts.headers.set('Expires', auth.expiration);
             }
         }
     }

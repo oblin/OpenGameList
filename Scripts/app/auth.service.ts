@@ -1,10 +1,13 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
+import { IntervalObservable } from 'rxjs/Observable/IntervalObservable';
 
 @Injectable()
 export class AuthService {
     private readonly authKey = 'auth';       // key for local storage
+    private refreshSubscription: any;
+    private notRefreshToken = true;
 
     constructor(private http: Http) { }
 
@@ -19,7 +22,7 @@ export class AuthService {
             scope: 'offline_access profile email'
         };
 
-        return this.postToAuthServer(data);
+        return this.postToAuthServer(data, this.scheduleRefresh);
 
         // return this.http
         //     .post(
@@ -40,6 +43,7 @@ export class AuthService {
 
     logout(): boolean {
         this.setAuth(null);
+        this.unscheduleRefresh();
         return false;
     }
 
@@ -50,7 +54,7 @@ export class AuthService {
      */
     toUrlEncodedString(data: any): string {
         let body = '';
-        console.log('toUrlEncodedString data: ' + JSON.stringify(data));
+        // console.log('toUrlEncodedString data: ' + JSON.stringify(data));
         for (let key in data) {
             if (data.hasOwnProperty(key)) {
                 if (body.length) {
@@ -60,7 +64,7 @@ export class AuthService {
                 body += encodeURIComponent(data[key]);
             }
         }
-        console.log('toUrlEncodedString body: ' + body);
+        // console.log('toUrlEncodedString body: ' + body);
         return body;
     }
 
@@ -95,6 +99,40 @@ export class AuthService {
         return localStorage.getItem(this.authKey) != null;
     }
 
+    /**
+     * 當瀏覽器啟動時候，需要進行第一次的呼叫，讓瀏覽器可以開始設定到
+     * IntervalObservable 中
+     */
+    startupTokenRefresh() {
+        this.refreshTokenNow();
+        this.scheduleRefresh();
+    }
+
+    /**
+     * 排程下一次自動 refresh token 的時間 
+     * 當從 server 取回 token 後（包含第一次 login & 之後的 refresh token）
+     * @param {number} expiresIn 預計幾秒後就失效
+     */
+    scheduleRefresh() {
+        let auth = this.getAuth();
+        if (auth && this.notRefreshToken) {
+            this.notRefreshToken = false;
+            this.refreshSubscription = IntervalObservable.create(auth.expires_in * 1000);   // ms to second
+            this.refreshSubscription.subscribe(() => {
+                    console.log('Auto refresh token begin...');
+                    this.refreshTokenNow();
+                });
+        }
+    }
+
+    unscheduleRefresh() {
+        // Unsubscribe fromt the refresh
+        if (this.refreshSubscription) {
+            console.log('refreshSubscription.unsubscribe');
+            this.refreshSubscription.unsubscribe();
+        }
+    }
+
     refreshToken(): Observable<any> {
         let auth = this.getAuth();
         console.log('Invoke refreshToken, token expires_in: ' + auth.expires_in);
@@ -108,23 +146,36 @@ export class AuthService {
         return this.postToAuthServer(data);
     }
 
-    private postToAuthServer(data: any): Observable<any> {
+    /**
+     * refreshToken with subscribe 讓他立刻執行 
+     * @private
+     */
+    private refreshTokenNow(): void {
+        this.refreshToken()
+            .subscribe(token => {
+                this.notRefreshToken = true;
+                console.log('refresh result: ' + JSON.stringify(token))}
+            );
+    }
+
+    private postToAuthServer(data: any, scheduleRefresh?: any): Observable<any> {
         let tokenUrl = 'api/connect/token';  // JwtProvider's Login path
 
         return this.http
             .post(
-            tokenUrl,
-            this.toUrlEncodedString(data),
-            new RequestOptions({
-                headers: new Headers({
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                })
+                tokenUrl,
+                this.toUrlEncodedString(data),
+                new RequestOptions({
+                    headers: new Headers({
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    })
             }))
             .map(response => {
                 let auth = response.json();
-                console.log(`The following auth JSON object received: ${auth}`);
+                // console.log(`The following auth JSON object received: ${auth}`);
                 this.setAuth(auth);
                 return auth;
-            });
+            })
+            .do((d) => { if (scheduleRefresh) { scheduleRefresh(); }});
     }
 }
