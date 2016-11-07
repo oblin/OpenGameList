@@ -65,6 +65,15 @@ export class ItemDetailEditComponent implements OnInit {
         );
     }
 
+    /**
+     * 處理 Token 逾期的時候，可以透過 refresh token 再次取得（不需要重新登入）
+     * 
+     */
+    onRefreshToken() {
+        this.authService.refreshToken()
+            .subscribe(token => console.log('refresh result: ' + JSON.stringify(token)));
+    }
+
     onBack() {
         this.router.navigate(['']);
     }

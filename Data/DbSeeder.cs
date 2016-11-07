@@ -5,6 +5,9 @@ using System;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using OpenIddict;
+using CryptoHelper;
+using Microsoft.Extensions.Configuration;
 
 namespace OpenGameList.Data
 {
@@ -13,21 +16,42 @@ namespace OpenGameList.Data
         private ApplicationDbContext _dbContext;
         private RoleManager<IdentityRole> _roleManager;
         private UserManager<ApplicationUser> _userManager;
+        private IConfiguration _configuration;
 
         public DbSeeder(ApplicationDbContext dbContext,
             RoleManager<IdentityRole> roleManager,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration)
         {
             _dbContext = dbContext;
             _roleManager = roleManager;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         public async Task SeedAsync()
         {
             _dbContext.Database.EnsureCreated();
+            // OpenIddictApplications , needs to be populated with a single row corresponding to our web application.
+            if (!_dbContext.Applications.Any()) CreateApplication();
             if (await _dbContext.Users.CountAsync() == 0) await CreateUsers();
             if (await _dbContext.Items.CountAsync() == 0) CreateItems();
+        }
+
+        private void CreateApplication()
+        {
+            _dbContext.Applications.Add(new OpenIddictApplication
+            {
+                Id = _configuration["Authentication:OpenIddict:ApplicationId"],
+                DisplayName = _configuration["Authentication:OpenIddict:DisplayName"],
+                RedirectUri = _configuration["Authentication:OpenIddict:TokenEndPoint"],
+                LogoutRedirectUri = "/",
+                ClientId = _configuration["Authentication:OpenIddict:ClientId"],
+                ClientSecret = Crypto.HashPassword(_configuration["Authentication:OpenIddict:ClientSecret"]),
+                Type = OpenIddictConstants.ClientTypes.Public
+            });
+
+            _dbContext.SaveChanges();
         }
 
         private void CreateItems()

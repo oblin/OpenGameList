@@ -9,7 +9,6 @@ export class AuthService {
     constructor(private http: Http) { }
 
     login(username: string, password: string): Observable<any> {
-        let url = 'api/connect/token';  // JwtProvider's Login path
         let data = {
             username: username,
             password: password,
@@ -20,21 +19,23 @@ export class AuthService {
             scope: 'offline_access profile email'
         };
 
-        return this.http
-            .post(
-                url,
-                this.toUrlEncodedString(data),
-                new RequestOptions({
-                    headers: new Headers({
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    })
-            }))
-            .map(response => {
-                let auth = response.json();
-                console.log(`The following auth JSON object received: ${auth}`);
-                this.setAuth(auth);
-                return auth;
-            });
+        return this.postToAuthServer(data);
+
+        // return this.http
+        //     .post(
+        //     this.tokenUrl,
+        //     this.toUrlEncodedString(data),
+        //     new RequestOptions({
+        //         headers: new Headers({
+        //             'Content-Type': 'application/x-www-form-urlencoded'
+        //         })
+        //     }))
+        //     .map(response => {
+        //         let auth = response.json();
+        //         console.log(`The following auth JSON object received: ${auth}`);
+        //         this.setAuth(auth);
+        //         return auth;
+        //     });
     }
 
     logout(): boolean {
@@ -92,5 +93,38 @@ export class AuthService {
      */
     isLoggedIn(): boolean {
         return localStorage.getItem(this.authKey) != null;
+    }
+
+    refreshToken(): Observable<any> {
+        let auth = this.getAuth();
+        console.log('Invoke refreshToken, token expires_in: ' + auth.expires_in);
+        let data = {
+            client_id: 'OpenGameList',
+            refresh_token: auth.refresh_token,
+            grant_type: 'refresh_token',
+            scope: 'offline_access profile email'
+        };
+
+        return this.postToAuthServer(data);
+    }
+
+    private postToAuthServer(data: any): Observable<any> {
+        let tokenUrl = 'api/connect/token';  // JwtProvider's Login path
+
+        return this.http
+            .post(
+            tokenUrl,
+            this.toUrlEncodedString(data),
+            new RequestOptions({
+                headers: new Headers({
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                })
+            }))
+            .map(response => {
+                let auth = response.json();
+                console.log(`The following auth JSON object received: ${auth}`);
+                this.setAuth(auth);
+                return auth;
+            });
     }
 }

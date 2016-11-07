@@ -33,23 +33,48 @@ namespace OpenGameList
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add a reference to Configuration object for Disabled
+            services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(c => { return Configuration; });
             // Add framework services.
             services.AddMvc();
 
             // Add EntityFramework's Identity support
             services.AddEntityFramework();
             // Add Identity services & stores
-            services.AddIdentity<ApplicationUser, IdentityRole>(config => {
+            services.AddIdentity<ApplicationUser, IdentityRole>(config =>
+                {
                     config.User.RequireUniqueEmail = true;
                     config.Password.RequireDigit = true;
                     config.Password.RequireNonAlphanumeric = false;
-                    config.Cookies.ApplicationCookie.AutomaticChallenge = false; 
+                    config.Cookies.ApplicationCookie.AutomaticChallenge = false;
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
             // Add ApplicationDbContext
             string connectionString = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+
+            // Register the OpenIddict services, including the default EF stores
+            services.AddOpenIddict<ApplicationDbContext>()
+                // Register the ASP.NET Core MVC binder used by OpenIddict, bind OpenIdConnectRequest or OpenIdConnectResponse parameters
+                .AddMvcBinders()
+                .UseJsonWebTokens()
+                // Set a custom token endpoint (default is /connect/token)
+                .EnableTokenEndpoint(Configuration["Authentication:OpenIddict:TokenEndPoint"])
+                // Set a custom auth endpoint (default is /connect/authorize)
+                .EnableAuthorizationEndpoint(Configuration["Authentication:OpenIddict:AuthorizationEndPoint"])
+                // Allow client applications to use the grant_type=password flow.
+                .AllowPasswordFlow()
+                // Enable support for both authorization & implicit flows
+                .AllowAuthorizationCodeFlow().AllowImplicitFlow()
+                // Allow the client to refresh Tokens
+                .AllowRefreshTokenFlow()
+                .SetAccessTokenLifetime(TimeSpan.FromMinutes(3))
+                //  Disable the HTTPS requirement (not recommended in production)
+                .DisableHttpsRequirement()
+                // Register a new ephemeral key for development.
+                // We will register a X.509 certificate in production.
+                .AddEphemeralSigningKey();
 
             // Add application's seed Data
             services.AddSingleton<DbSeeder>();
@@ -92,22 +117,28 @@ namespace OpenGameList
             });
 
             // Add a custom Jwt Provider to generate Tokens
-            app.UseJwtProvider();
+            // app.UseJwtProvider();
+            // Add OpenIddict middleware, Must registered after app.UseIdentity() and the external social providers
+            app.UseOpenIddict();
+
             // Add the Jwt Bearer Header Authentication to validate Tokens
-            app.UseJwtBearerAuthentication(new JwtBearerOptions(){
+            app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            {
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
                 RequireHttpsMetadata = false,
+                //  specify an explicit  Authority  property value to allow 
+                // the JWT bearer middleware to download the signing key.
+                Authority = Configuration["Authentication:OpenIddict:Authority"],
                 TokenValidationParameters = new TokenValidationParameters()
                 {
                     // Basic settings - signing key to validate with, audience and issuer.
-                    IssuerSigningKey = JwtProvider.SecurityKey,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = JwtProvider.Issuer,
+                    // IssuerSigningKey = JwtProvider.SecurityKey,
+                    // ValidateIssuerSigningKey = true,
+                    // ValidIssuer = JwtProvider.Issuer,
                     ValidateIssuer = true,
                     ValidateAudience = false,
-                    // // When receiving a token, check that it is still valid.
-                    ValidateLifetime = true,
+                    // ValidateLifetime = true,
                     // ClockSkew = TimeSpan.Zero
                 }
             });
@@ -115,7 +146,8 @@ namespace OpenGameList
             app.UseMvc();
 
             // Add Item Mapping
-            Mapper.Initialize(config => {
+            Mapper.Initialize(config =>
+            {
                 config.CreateMap<Item, ItemViewModel>().ReverseMap();
                 // 以下設定如果可以在前端設定比較容易理解，因此先移除
                 // config.CreateMap<ItemViewModel, Item>()

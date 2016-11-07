@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using OpenIddict;
 
 namespace OpenGameList.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    // OpenIddictDbContext 自動加入四個 TABLES: OpenIddictApplications OpenIddictAuthorizations OpenIddictScopes OpenIddictTokens
+    // 會直接對應 public DbSet properties 為：Applications, Authorizations, Scopes, Tokens 
+    public class ApplicationDbContext : OpenIddictDbContext<ApplicationUser>
     {
         public ApplicationDbContext(DbContextOptions options) : base(options) { }
 
