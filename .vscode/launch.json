@@ -36,10 +36,9 @@
             "name": "Launch localhost with sourcemaps",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:5000/index.html",
-            "webRoot": "${workspaceRoot}/wwwroot/app",
-            "sourceMaps": true,
-            "runtimeExecutable": "F:/Tools/GoogleChromePortable/GoogleChromePortable.exe"
+            "url": "http://localhost:5000",
+            "webRoot": "${workspaceRoot}/wwwroot",
+            "sourceMaps": true
         },
         {
             "name": "Attach with sourcemaps",
@@ -47,7 +46,6 @@
             "request": "attach",
             "port": 9222,
             "url": "http://localhost:5000/",
-            "webRoot": "${workspaceRoot}/wwwroot/app",
             "sourceMaps": true
         },
         {

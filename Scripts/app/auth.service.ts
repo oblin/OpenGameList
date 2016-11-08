@@ -101,8 +101,9 @@ export class AuthService {
         let auth = this.getAuth();
         if (auth && this.notRefreshToken) {
             this.notRefreshToken = false;
-            this.refreshSubscription = IntervalObservable.create(auth.expires_in * 1000);   // ms to second
-            this.refreshSubscription.subscribe(() => {
+            // 必須要使用 create 之後才能用 unscubscribe 取消
+            let source = IntervalObservable.create(auth.expires_in * 1000);   // ms to second
+            this.refreshSubscription = source.subscribe(() => {
                     console.log('Auto refresh token begin...');
                     this.refreshTokenNow();
                 });
@@ -117,6 +118,11 @@ export class AuthService {
         }
     }
 
+    /**
+     * 將現有 auth 的 refresh_token 傳回 server 端，並接收新的 token & refresh_token 
+     * 如此就可以延長登入有效時間。
+     * @returns {Observable<any>} 需要執行 subscribe 才會啟動
+     */
     refreshToken(): Observable<any> {
         let auth = this.getAuth();
         console.log('Invoke refreshToken, token expires_in: ' + auth.expires_in);
@@ -138,8 +144,8 @@ export class AuthService {
         this.refreshToken()
             .subscribe(token => {
                 this.notRefreshToken = true;
-                console.log('refresh result: ' + JSON.stringify(token))}
-            );
+                console.log('refresh result: ' + JSON.stringify(token));
+            });
     }
 
     private postToAuthServer(data: any, scheduleRefresh?: any): Observable<any> {
@@ -158,8 +164,11 @@ export class AuthService {
                 let auth = response.json();
                 // console.log(`The following auth JSON object received: ${auth}`);
                 this.setAuth(auth);
+                if (scheduleRefresh) {
+                    this.scheduleRefresh();
+                }
                 return auth;
-            })
-            .do((d) => { if (scheduleRefresh) { scheduleRefresh(); }});
+            });
+            // .do((d) => { });
     }
 }

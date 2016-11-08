@@ -43,6 +43,8 @@ export class AppComponent implements OnInit {
 
     ngOnInit() {
         console.log('App Component is start....');
-        this.authService.startupTokenRefresh();
+        if (this.authService.getAuth()) {
+            this.authService.startupTokenRefresh();
+        }
     }
 }

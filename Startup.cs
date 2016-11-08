@@ -68,6 +68,7 @@ namespace OpenGameList
                 .AllowAuthorizationCodeFlow().AllowImplicitFlow()
                 // Allow the client to refresh Tokens
                 .AllowRefreshTokenFlow()
+                // 設定 Token 失效時間
                 .SetAccessTokenLifetime(TimeSpan.FromMinutes(3))
                 //  Disable the HTTPS requirement (not recommended in production)
                 .DisableHttpsRequirement()

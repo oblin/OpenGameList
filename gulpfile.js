@@ -52,6 +52,15 @@ gulp.task('app', ['app_clean'], function () {
         .pipe(gp_sourcemaps.write('/'))
         .pipe(gulp.dest(destPaths.app));
 });
+// Compile, minify and create sourcemaps all TypeScript files and place them to wwwroot/app, together with their js.map files.
+gulp.task('app_debug', ['app_clean'], function () {
+    gulp.src(srcPaths.app).pipe(gulp.dest(destPaths.app));
+    return gulp.src(srcPaths.app)
+        .pipe(gp_sourcemaps.init())
+        .pipe(gp_typescript(require('./tsconfig.json').compilerOptions))
+        .pipe(gp_sourcemaps.write('/'))
+        .pipe(gulp.dest(destPaths.app));
+});
 // Delete wwwroot/app contents
 gulp.task('app_clean', function () {
     return gulp.src(destPaths.app + "*", { read: false })
@@ -99,6 +108,11 @@ gulp.task('template_clean', function() {
 gulp.task('watch', function () {
     gulp.watch([srcPaths.app, srcPaths.template, srcPaths.less, srcPaths.js], ['app', 'template', 'less', 'js']);
 });
+gulp.task('watch_debug', function () {
+    gulp.watch([srcPaths.app, srcPaths.template, srcPaths.less, srcPaths.js], ['app_debug', 'template', 'less', 'js']);
+});
 
 // Define the default task so it will launch all other tasks
 gulp.task('default', ['app', 'template', 'less', 'js', 'watch']);
+
+gulp.task('debug', ['app_debug', 'template', 'less', 'js', 'watch_debug']);
