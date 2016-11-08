@@ -118,6 +118,22 @@ namespace OpenGameList
 
             // Add a custom Jwt Provider to generate Tokens
             // app.UseJwtProvider();
+
+            // Add the AspNetCore.Identity middleware (required for external auth providers)
+            // IMPORTANT: 必須要放在 OpenIddict 或任何其他的外部 providers 之前
+            app.UseIdentity();
+
+            // 外部 Facebook 驗證
+            app.UseFacebookAuthentication(new FacebookOptions()
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                AppId = Configuration["Authentication:Facebook:AppId"],
+                AppSecret = Configuration["Authentication:Facebook:AppSecret"],
+                CallbackPath = "/signin-facebook",
+                Scope = { "email" }
+            });
+
             // Add OpenIddict middleware, Must registered after app.UseIdentity() and the external social providers
             app.UseOpenIddict();
 
