@@ -11,7 +11,6 @@ using OpenGameList.Data;
 using OpenGameList.ViewModels;
 using System;
 using System.IO;
-using OpenGameList.Infrastructure;
 using Microsoft.IdentityModel.Tokens;
 
 namespace OpenGameList

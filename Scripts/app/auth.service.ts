@@ -23,22 +23,6 @@ export class AuthService {
         };
 
         return this.postToAuthServer(data, this.scheduleRefresh);
-
-        // return this.http
-        //     .post(
-        //     this.tokenUrl,
-        //     this.toUrlEncodedString(data),
-        //     new RequestOptions({
-        //         headers: new Headers({
-        //             'Content-Type': 'application/x-www-form-urlencoded'
-        //         })
-        //     }))
-        //     .map(response => {
-        //         let auth = response.json();
-        //         console.log(`The following auth JSON object received: ${auth}`);
-        //         this.setAuth(auth);
-        //         return auth;
-        //     });
     }
 
     logout(): boolean {

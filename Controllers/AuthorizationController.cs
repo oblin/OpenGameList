@@ -4,10 +4,7 @@
  * the license and the contributors participating to this project.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AspNet.Security.OpenIdConnect.Extensions;
 using AspNet.Security.OpenIdConnect.Server;
@@ -21,7 +18,8 @@ using Mvc.Server.ViewModels.Shared;
 using OpenGameList.Data;
 using OpenIddict;
 
-namespace Mvc.Server {
+namespace Mvc.Server
+{
     public class AuthorizationController : Controller {
         private readonly OpenIddictApplicationManager<OpenIddictApplication> _applicationManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
