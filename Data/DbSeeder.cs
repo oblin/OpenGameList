@@ -176,13 +176,15 @@ namespace OpenGameList.Data
             DateTime createdDate = new DateTime(2016, 03, 01, 12, 30, 00);
             DateTime lastModifiedDate = DateTime.Now;
             const string roleAdministrators = "Administrators";
-            const string roleRegistered = "Registerd";
+            const string roleRegistered = "Registered";
 
             // Create Role (if they doesn't exist yet)
             if (!await _roleManager.RoleExistsAsync(roleAdministrators))
-                await _roleManager.CreateAsync(new IdentityRole(roleAdministrators));
+                await _roleManager.CreateAsync(
+                    new IdentityRole(roleAdministrators));
             if (!await _roleManager.RoleExistsAsync(roleRegistered))
-                await _roleManager.CreateAsync(new IdentityRole(roleRegistered));
+                await _roleManager.CreateAsync(
+                    new IdentityRole(roleRegistered));
 
             // Create the "Admin" ApplicationUser account (if it doesn't exist already)
             var user_Admin = new ApplicationUser()

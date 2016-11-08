@@ -8,20 +8,19 @@ using OpenGameList.Data;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace OpenGameList.Controllers
 {
-    [Route("api/[controller]")]
-    public class ItemsController : Controller
+    public class ItemsController : BaseController
     {
-        private ApplicationDbContext _context;
-
-        public ItemsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        public ItemsController(ApplicationDbContext context,
+            SignInManager<ApplicationUser> signInManager,
+            UserManager<ApplicationUser> userManager)
+        : base(context, signInManager, userManager) { }
 
         #region RESTFul Conventions
         [HttpGet]
@@ -41,13 +40,13 @@ namespace OpenGameList.Controllers
         }
 
         [HttpPost, Authorize]
-        public IActionResult Add([FromBody]ItemViewModel model)
+        public async Task<IActionResult> Add([FromBody]ItemViewModel model)
         {
             if (ModelState.IsValid && model != null)
             {
                 var item = Mapper.Map<Item>(model);
                 item.CreatedDate = item.LastModifiedDate = DateTime.Now;
-                item.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                item.UserId = await GetCurrentUserId();
                 _context.Items.Add(item);
                 _context.SaveChanges();
 
@@ -158,17 +157,6 @@ namespace OpenGameList.Controllers
                 });
             }
             return lst;
-        }
-
-        private JsonSerializerSettings DefaultJsonSettings
-        {
-            get
-            {
-                return new JsonSerializerSettings()
-                {
-                    Formatting = Formatting.Indented
-                };
-            }
         }
 
         private int DefaultNumberOfItems => 5;

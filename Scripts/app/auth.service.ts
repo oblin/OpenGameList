@@ -25,10 +25,16 @@ export class AuthService {
         return this.postToAuthServer(data, this.scheduleRefresh);
     }
 
-    logout(): boolean {
-        this.setAuth(null);
-        this.unscheduleRefresh();
-        return false;
+    logout(): Observable<boolean> {
+        return this.http.post('api/Accounts/Logout', null)
+            .map(response => {
+                this.setAuth(null);
+                this.unscheduleRefresh();
+                return true;
+            })
+            .catch(err => {
+                return Observable.throw(err);
+            });
     }
 
     /**

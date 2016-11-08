@@ -1,4 +1,4 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
@@ -21,7 +21,18 @@ import { AuthService } from './auth.service';
 export class AppComponent implements OnInit {
     title = 'OpenGameList';
 
-    constructor(private router: Router, private authService: AuthService) { }
+    constructor(private router: Router,
+        private authService: AuthService,
+        public zone: NgZone) {
+        if (!(<any>window).externalProviderLogin) {
+            let self = this;
+            (<any>window).externalProviderLogin = function (auth) {
+                self.zone.run(() => {
+                    self.externalProviderLogin(auth);
+                });
+            }
+        }
+    }
 
     /**
      * 判斷傳入的資料組合是否是目前的 url
@@ -35,10 +46,19 @@ export class AppComponent implements OnInit {
     }
 
     logout(): boolean {
-        if (this.authService.logout()) {
-            this.router.navigate(['']);
-        }
+        // logout current user, then redirect to welcome view
+        this.authService.logout().subscribe(result => {
+            if (result) {
+                this.router.navigate(['']);
+            }
+        });
         return false;
+    }
+
+    externalProviderLogin(auth: any) {
+        this.authService.setAuth(auth);
+        console.log(`External Login successful! Provider: ${this.authService.getAuth().providerName}`);
+        this.router.navigate(['']);
     }
 
     ngOnInit() {

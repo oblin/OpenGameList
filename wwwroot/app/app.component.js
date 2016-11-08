@@ -12,10 +12,19 @@ var core_1 = require('@angular/core');
 var router_1 = require('@angular/router');
 var auth_service_1 = require('./auth.service');
 var AppComponent = (function () {
-    function AppComponent(router, authService) {
+    function AppComponent(router, authService, zone) {
         this.router = router;
         this.authService = authService;
+        this.zone = zone;
         this.title = 'OpenGameList';
+        if (!window.externalProviderLogin) {
+            var self_1 = this;
+            window.externalProviderLogin = function (auth) {
+                self_1.zone.run(function () {
+                    self_1.externalProviderLogin(auth);
+                });
+            };
+        }
     }
     /**
      * 判斷傳入的資料組合是否是目前的 url
@@ -28,10 +37,19 @@ var AppComponent = (function () {
         this.router.createUrlTree(link), true);
     };
     AppComponent.prototype.logout = function () {
-        if (this.authService.logout()) {
-            this.router.navigate(['']);
-        }
+        var _this = this;
+        // logout current user, then redirect to welcome view
+        this.authService.logout().subscribe(function (result) {
+            if (result) {
+                _this.router.navigate(['']);
+            }
+        });
         return false;
+    };
+    AppComponent.prototype.externalProviderLogin = function (auth) {
+        this.authService.setAuth(auth);
+        console.log("External Login successful! Provider: " + this.authService.getAuth().providerName);
+        this.router.navigate(['']);
     };
     AppComponent.prototype.ngOnInit = function () {
         console.log('App Component is start....');
@@ -44,7 +62,7 @@ var AppComponent = (function () {
             selector: 'opengamelist',
             templateUrl: './template/app.component.html'
         }), 
-        __metadata('design:paramtypes', [router_1.Router, auth_service_1.AuthService])
+        __metadata('design:paramtypes', [router_1.Router, auth_service_1.AuthService, core_1.NgZone])
     ], AppComponent);
     return AppComponent;
 }());

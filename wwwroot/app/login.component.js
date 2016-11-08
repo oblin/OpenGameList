@@ -19,6 +19,7 @@ var LoginComponent = (function () {
         this.authService = authService;
         this.title = 'Login';
         this.loginError = false;
+        this.externalProviderWindow = null; // 必須要是 public 讓外部可以呼叫
     }
     LoginComponent.prototype.ngOnInit = function () {
         this.loginForm = this.fb.group({
@@ -42,6 +43,19 @@ var LoginComponent = (function () {
             _this.loginError = true;
         });
         // alert(JSON.stringify(this.loginForm.value));
+    };
+    LoginComponent.prototype.callExternalLogin = function (providerName) {
+        var url = 'api/Accounts/ExternalLogin/' + providerName;
+        // minialistic mobile devices support
+        var w = (screen.width >= 1050) ? 1050 : screen.width;
+        var h = (screen.height >= 550) ? 550 : screen.height;
+        var params = "toolbar=yes,scrollbars=yes,resizable=yes,width=" + w + ",height=" + h;
+        // close previously opened windows (if any)
+        if (this.externalProviderWindow) {
+            this.externalProviderWindow.close();
+        }
+        this.externalProviderWindow =
+            window.open(url, 'ExternalProvider', params, false);
     };
     LoginComponent = __decorate([
         core_1.Component({
