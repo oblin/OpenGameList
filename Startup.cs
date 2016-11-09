@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,9 +26,12 @@ namespace OpenGameList
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            Protector = CreateDataProtector();
         }
 
         public IConfigurationRoot Configuration { get; }
+        public IDataProtector Protector { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -128,9 +132,19 @@ namespace OpenGameList
             {
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
-                AppId = Configuration["Authentication:Facebook:AppId"],
-                AppSecret = Configuration["Authentication:Facebook:AppSecret"],
+                AppId = Protector.Unprotect(Configuration["Authentication:Facebook:AppId"]),
+                AppSecret = Protector.Unprotect(Configuration["Authentication:Facebook:AppSecret"]),
                 CallbackPath = "/signin-facebook",
+                Scope = { "email" }
+            });
+
+            app.UseGoogleAuthentication(new GoogleOptions()
+            {
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true,
+                ClientId = Protector.Unprotect(Configuration["Authentication:Google:ClientId"]),
+                ClientSecret = Protector.Unprotect(Configuration["Authentication:Google:ClientSecret"]),
+                CallbackPath = "/signin-google",
                 Scope = { "email" }
             });
 
@@ -179,6 +193,22 @@ namespace OpenGameList
             {
                 throw new Exception(e.ToString());
             }
+        }
+
+        private IDataProtector CreateDataProtector()
+        {
+            string destFolder = Path.Combine(
+                Environment.GetEnvironmentVariable("LOCALAPPDATA"),
+                "AppSecrets");
+            var dataProtectionProvider = DataProtectionProvider.Create(
+                new DirectoryInfo(destFolder),
+                configuration =>
+                {
+                    configuration.SetApplicationName("SecretsManager");
+                    configuration.ProtectKeysWithDpapi();
+                }
+            );
+            return dataProtectionProvider.CreateProtector("General.Protection");
         }
     }
 }

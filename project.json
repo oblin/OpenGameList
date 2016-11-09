@@ -32,7 +32,9 @@
     "AspNet.Security.OAuth.Validation": "1.0.0-alpha2-final",
     "OpenIddict": "1.0.0-*",
     "OpenIddict.Mvc": "1.0.0-*",
-    "Microsoft.AspNetCore.Authentication.Facebook": "1.0.0"
+    "Microsoft.AspNetCore.DataProtection.Extensions": "1.0.0",
+    "Microsoft.AspNetCore.Authentication.Facebook": "1.0.0",
+    "Microsoft.AspNetCore.Authentication.Google": "1.0.0"
   },
 
   "tools": {
