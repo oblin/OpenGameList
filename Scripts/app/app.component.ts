@@ -6,17 +6,6 @@ import { AuthService } from './auth.service';
 @Component({
     selector: 'opengamelist',
     templateUrl: './template/app.component.html'
-    // 改用 templateUrl
-    // template: `
-    //     <h1>{{ title }}</h1>
-    //     <div class="menu">
-    //         <a class="home" [routerLink]="['']">Home</a>
-    //         | <a class="about" [routerLink]="['about']">About</a>
-    //         | <a class="login" [routerLink]="['login']">Login</a>
-    //         | <a class="add" [routerLink]="['item/edit', 0]">Add New</a>
-    //     </div>
-    //     <router-outlet></router-outlet>
-    // `
 })
 export class AppComponent implements OnInit {
     title = 'OpenGameList';
@@ -30,7 +19,7 @@ export class AppComponent implements OnInit {
                 self.zone.run(() => {
                     self.externalProviderLogin(auth);
                 });
-            }
+            };
         }
     }
 
@@ -61,9 +50,12 @@ export class AppComponent implements OnInit {
         this.router.navigate(['']);
     }
 
+    // TODO: 加入顯示登入的使用者 DisplayName
     ngOnInit() {
         console.log('App Component is start....');
-        if (this.authService.getAuth()) {
+        let auth = this.authService.getAuth();
+        // 檢查是 local login (with expires_in) 則進行 token refresh
+        if (auth && auth.expires_in) {
             this.authService.startupTokenRefresh();
         }
     }

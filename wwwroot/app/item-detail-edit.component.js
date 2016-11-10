@@ -77,6 +77,11 @@ var ItemDetailEditComponent = (function () {
         this.router.navigate(['item/view', item.Id]);
         // return false;
     };
+    ItemDetailEditComponent.prototype.onGetUserInfo = function () {
+        this.authService.get().subscribe(function (user) {
+            alert('current user is ' + JSON.stringify(user));
+        });
+    };
     ItemDetailEditComponent = __decorate([
         core_1.Component({
             selector: 'item-detail-edit',

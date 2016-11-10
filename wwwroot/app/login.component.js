@@ -35,14 +35,15 @@ var LoginComponent = (function () {
         this.authService.login(username, password)
             .subscribe(function (data) {
             _this.loginError = false;
-            var auth = _this.authService.getAuth();
-            alert('Our Token is: ' + auth.access_token);
             _this.router.navigate(['']);
         }, function (err) {
             console.log(err);
             _this.loginError = true;
         });
         // alert(JSON.stringify(this.loginForm.value));
+    };
+    LoginComponent.prototype.onRegister = function () {
+        this.router.navigate(['register']);
     };
     LoginComponent.prototype.callExternalLogin = function (providerName) {
         var url = 'api/Accounts/ExternalLogin/' + providerName;

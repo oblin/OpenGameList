@@ -2,6 +2,8 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Http, Headers, Response, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { IntervalObservable } from 'rxjs/Observable/IntervalObservable';
+import { User } from './user';
+import { AuthHttp } from './auth.http';
 
 @Injectable()
 export class AuthService {
@@ -9,7 +11,7 @@ export class AuthService {
     private refreshSubscription: any;
     private notRefreshToken = true;
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private httpConfig: AuthHttp) { }
 
     login(username: string, password: string): Observable<any> {
         let data = {
@@ -38,25 +40,40 @@ export class AuthService {
     }
 
     /**
-     * Converts a JSON object to urlencoded format
-     * @param {*} data
-     * @returns {string}
+     * 取回使用者自己的使用者帳號（目的：例如顯示使用者名稱）
+     * @returns {Observable<User>}
      */
-    toUrlEncodedString(data: any): string {
-        let body = '';
-        // console.log('toUrlEncodedString data: ' + JSON.stringify(data));
-        for (let key in data) {
-            if (data.hasOwnProperty(key)) {
-                if (body.length) {
-                    body += '&';
-                }
-                body += key + '=';
-                body += encodeURIComponent(data[key]);
-            }
-        }
-        // console.log('toUrlEncodedString body: ' + body);
-        return body;
+    get(): Observable<User> {
+        return this.http.get('api/Accounts', this.getIfBearerToken())
+            .map(response => <User>response.json());
     }
+
+    add(user: User): Observable<User> {
+        return this.http.post('api/Accounts', JSON.stringify(user), this.httpConfig.RequestOptionJsonType)
+            .map(response => <User>response.json());
+    }
+
+    update(user: User): Observable<User> {
+       return this.http.put('api/Accounts/', JSON.stringify(user),
+            this.getIfBearerToken(this.httpConfig.RequestOptionJsonType))
+            .map(response => <User>response.json());
+    }
+
+    /**
+     * 設定 request Headers with Bearer Token
+     * 
+     * @readonly
+     * @private
+     * @type {*} 如果沒有會回傳 {}，否則回傳 { Header: 'Bearer ...' }
+     */
+    private getIfBearerToken(opts: any = {}): any {
+        let authToken = this.getAuth();
+        if (authToken && authToken.expires_in) {
+            this.httpConfig.configureAuth(opts);
+        }
+        return opts;
+    }
+    // TODO: 加入前端刪除使用者 by Id 的功能
 
     /**
      * Persist auth into local storage or removes it if a null argument is given
@@ -72,6 +89,10 @@ export class AuthService {
         return true;
     }
 
+    /**
+     * 取出目前存放在 localStorage 的 auth 資料 
+     * @returns {*} Auth Token object
+     */
     getAuth(): any {
         let auth = localStorage.getItem(this.authKey);
         if (auth) {
@@ -105,7 +126,7 @@ export class AuthService {
      */
     scheduleRefresh() {
         let auth = this.getAuth();
-        if (auth && this.notRefreshToken) {
+        if (auth && auth.expires_in && this.notRefreshToken) {
             this.notRefreshToken = false;
             // 必須要使用 create 之後才能用 unscubscribe 取消
             let source = IntervalObservable.create(auth.expires_in * 1000);   // ms to second
@@ -176,5 +197,26 @@ export class AuthService {
                 return auth;
             });
             // .do((d) => { });
+    }
+
+    /**
+     * Converts a JSON object to urlencoded format
+     * @param {*} data
+     * @returns {string}
+     */
+    private toUrlEncodedString(data: any): string {
+        let body = '';
+        // console.log('toUrlEncodedString data: ' + JSON.stringify(data));
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+                if (body.length) {
+                    body += '&';
+                }
+                body += key + '=';
+                body += encodeURIComponent(data[key]);
+            }
+        }
+        // console.log('toUrlEncodedString body: ' + body);
+        return body;
     }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers } from '@angular/http';
+import { Http, Headers, RequestOptions } from '@angular/http';
 
 @Injectable()
 export class AuthHttp {
@@ -26,6 +26,11 @@ export class AuthHttp {
         return this.http.delete(url, opts);
     }
 
+    /**
+     * 設定 WebApi 傳回的 Token，僅限定於 JWT 時候使用
+     * 
+     * @param {*} opts 可以傳入已經設定的 Headers，會再加上 Bearer token，如果沒有請使用 {} object
+     */
     configureAuth(opts: any) {
         let token = localStorage.getItem(this.authKey);
         if (token != null) {
@@ -38,5 +43,17 @@ export class AuthHttp {
                 opts.headers.set('Authorization', `Bearer ${auth.access_token}`);
             }
         }
+    }
+
+    /**
+     * Generate request headers
+     * @returns Headers: application/json
+     */
+    get RequestOptionJsonType() {
+        return new RequestOptions({
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            })
+        });
     }
 }

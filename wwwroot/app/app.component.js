@@ -51,9 +51,12 @@ var AppComponent = (function () {
         console.log("External Login successful! Provider: " + this.authService.getAuth().providerName);
         this.router.navigate(['']);
     };
+    // TODO: 加入顯示登入的使用者 DisplayName
     AppComponent.prototype.ngOnInit = function () {
         console.log('App Component is start....');
-        if (this.authService.getAuth()) {
+        var auth = this.authService.getAuth();
+        // 檢查是 local login (with expires_in) 則進行 token refresh
+        if (auth && auth.expires_in) {
             this.authService.startupTokenRefresh();
         }
     };

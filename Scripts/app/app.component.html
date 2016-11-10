@@ -21,9 +21,14 @@
                 <li [class.active]="isActive(['about'])">
                     <a class="about" [routerLink]="['about']">About</a>
                 </li>
+                <li [class.active]="isActive(['item/edit', 0])"
+                    *ngIf="authService.isLoggedIn()">
+                    <a class="add" [routerLink]="['item/edit', 0]">Add New</a>
+                </li>
+                <!--Account Related Commands-->
                 <li [class.active]="isActive(['login'])" 
                     *ngIf="!authService.isLoggedIn()">
-                    <a class="login" [routerLink]="['login']">Login</a>
+                    <a class="login" [routerLink]="['login']">登入 / 註冊新帳號</a>
                 </li>
                 <li [class.active]="isActive(['login'])" 
                     *ngIf="authService.isLoggedIn()">
@@ -32,9 +37,9 @@
                         Logout
                     </a>
                 </li>
-                <li [class.active]="isActive(['item/edit', 0])"
-                    *ngIf="authService.isLoggedIn()">
-                    <a class="add" [routerLink]="['item/edit', 0]">Add New</a>
+                <li [class.active]="isActive(['account'])"
+                    *ngIf="authService.isLoggedIn()" class="right">
+                    <a [routerLink]="['account']">修改帳號資料</a>
                 </li>
             </ul>
         </div>

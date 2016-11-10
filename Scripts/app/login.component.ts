@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from './auth.service';
+import { UserEditComponent } from './user-edit.component';
 
 @Component({
     selector: 'login',
@@ -32,8 +33,6 @@ export class LoginComponent implements OnInit {
             .subscribe(
                 (data) => {
                     this.loginError = false;
-                    let auth = this.authService.getAuth();
-                    alert('Our Token is: ' + auth.access_token);
                     this.router.navigate(['']);
                 },
                 (err) => {
@@ -42,6 +41,10 @@ export class LoginComponent implements OnInit {
                 }
             );
         // alert(JSON.stringify(this.loginForm.value));
+    }
+
+    onRegister() {
+        this.router.navigate(['register']);
     }
 
     callExternalLogin(providerName: string) {

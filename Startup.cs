@@ -13,6 +13,7 @@ using OpenGameList.ViewModels;
 using System;
 using System.IO;
 using Microsoft.IdentityModel.Tokens;
+using OpenGameListWebApp.ViewModels;
 
 namespace OpenGameList
 {
@@ -73,7 +74,7 @@ namespace OpenGameList
                 // Allow the client to refresh Tokens
                 .AllowRefreshTokenFlow()
                 // 設定 Token 失效時間
-                .SetAccessTokenLifetime(TimeSpan.FromMinutes(3))
+                .SetAccessTokenLifetime(TimeSpan.FromMinutes(15))
                 //  Disable the HTTPS requirement (not recommended in production)
                 .DisableHttpsRequirement()
                 // Register a new ephemeral key for development.
@@ -179,6 +180,7 @@ namespace OpenGameList
             Mapper.Initialize(config =>
             {
                 config.CreateMap<Item, ItemViewModel>().ReverseMap();
+                config.CreateMap<ApplicationUser, UserViewModel>();
                 // 以下設定如果可以在前端設定比較容易理解，因此先移除
                 // config.CreateMap<ItemViewModel, Item>()
                 //       .ForMember(dest => dest.ViewCount, opt => opt.Condition(src => (src.ViewCount > 0)));

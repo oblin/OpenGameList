@@ -1,0 +1,74 @@
+<div class="user-container">
+    <div class="alert alert-danger" *ngIf="errorMessage">{{errorMessage}}</div>
+    <form class="form-user" [formGroup]="userForm" (submit)="onSubmit()">
+        <h2 class="form-user-heading">{{title}}</h2>
+        <div class="form-group">
+            <input type="text" class="form-control" formControlName="username" 
+                placeholder="Input user's name" autofocus [disabled]="!this.isRegister" />
+            <span class="validator-label valid" 
+                *ngIf="this.userForm.controls.username.valid && this.userForm.controls.username.pristine">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true">Valid!</span>
+            </span>
+            <span class="validator-label invalid" 
+                *ngIf="!this.userForm.controls.username.valid && !this.userForm.controls.username.pristine">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true">Invalid</span>
+            </span>
+        </div>
+
+        <div class="form-group">
+            <input type="text" class="form-control" formControlName="email" placeholder="Type your email address" />
+            <span class="validator-label valid" 
+                *ngIf="this.userForm.controls.email.valid && this.userForm.controls.email.pristine">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Valid!
+            </span>
+            <span class="validator-label invalid" 
+                *ngIf="!this.userForm.controls.email.valid && !this.userForm.controls.email.pristine">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Invalid
+            </span>
+        </div>
+
+        <div class="form-group" *ngIf="!this.isRegister">
+            <input type="password" class="form-control" formControlName="passwordCurrent" placeholder="目前的密碼" />
+            <span class="validator-label invalid" 
+                *ngIf="!this.userForm.controls.password.valid">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Invalid
+            </span>
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" formControlName="password" placeholder="選擇您的密碼" />
+            <span class="validator-label valid" 
+                *ngIf="this.userForm.controls.password.valid && this.userForm.controls.password.pristine">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Valid!
+            </span>
+            <span class="validator-label invalid" 
+                *ngIf="!this.userForm.controls.password.valid && !this.userForm.controls.password.pristine">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Invalid
+            </span>
+        </div>
+
+        <div class="form-group">
+            <input type="password" class="form-control" formControlName="passwordConfirm" placeholder="請確認您的密碼" />
+            <span class="validator-label valid" 
+                *ngIf="this.userForm.controls.passwordConfirm.valid 
+                    && this.userForm.controls.passwordConfirm.pristine
+                    && !this.userForm.hasError('compareFailed')">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Valid!
+            </span>
+            <span class="validator-label invalid" 
+                *ngIf="(!this.userForm.controls.password.valid && !this.userForm.controls.password.pristine)
+                    || this.userForm.hasError('compareFailed')">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Invalid
+            </span>
+        </div>
+
+        <div class="form-group">
+            <input type="text" class="form-control" formControlName="displayName" placeholder="輸入您的顯示名稱">
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary btn-block" [disabled]="!userForm.valid" 
+                value="{{this.isRegister ? '註冊' : '儲存修改'}}" />
+        </div>
+    </form>
+</div>

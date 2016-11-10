@@ -6,6 +6,7 @@ var login_component_1 = require('./login.component');
 var page_not_found_component_1 = require('./page-not-found.component');
 var item_detail_edit_component_1 = require('./item-detail-edit.component');
 var item_detail_view_component_1 = require('./item-detail-view.component');
+var user_edit_component_1 = require('./user-edit.component');
 var appRoutes = [
     {
         path: '',
@@ -22,6 +23,14 @@ var appRoutes = [
     {
         path: 'login',
         component: login_component_1.LoginComponent
+    },
+    {
+        path: 'register',
+        component: user_edit_component_1.UserEditComponent
+    },
+    {
+        path: 'account',
+        component: user_edit_component_1.UserEditComponent
     },
     {
         path: 'item/edit/:id',

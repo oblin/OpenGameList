@@ -179,3 +179,40 @@ h2 {
 .login-container .form-login input {
   margin-bottom: 10px;
 }
+.user-container {
+  max-width: 500px;
+  padding: 15px;
+}
+.user-container .form-user {
+  margin-left: 20px;
+}
+.user-container .form-user input {
+  margin-bottom: 10px;
+  margin-right: 5px;
+  max-width: 330px;
+  display: inline;
+}
+.user-container .form-user .validator-label.valid {
+  color: green;
+}
+.user-container .form-user .validator-label.invalid {
+  color: red;
+}
+.user-container .register-link {
+  cursor: pointer;
+  font-size: 0.8em;
+  margin: 10px 0;
+}
+.register-link {
+  cursor: pointer;
+  font-size: 0.8em;
+  margin: 10px 0;
+}
+@media (min-width: 768px) {
+  .nav.navbar-nav {
+    float: none;
+  }
+  .nav.navbar-nav li.right {
+    float: right;
+  }
+}

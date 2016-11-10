@@ -82,4 +82,10 @@ export class ItemDetailEditComponent implements OnInit {
         this.router.navigate(['item/view', item.Id]);
         // return false;
     }
+
+    onGetUserInfo() {
+        this.authService.get().subscribe(user => {
+            alert('current user is ' + JSON.stringify(user));
+        });
+    }
 }

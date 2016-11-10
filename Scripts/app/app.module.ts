@@ -17,6 +17,7 @@ import { ItemDetailViewComponent } from './item-detail-view.component';
 import { AboutComponent } from './about.component';
 import { HomeComponent } from './home.component';
 import { LoginComponent } from './login.component';
+import { UserEditComponent } from './user-edit.component';
 import { PageNotFoundComponent } from './page-not-found.component';
 import { AppRouting } from './app.routing';
 
@@ -29,6 +30,7 @@ import { AppRouting } from './app.routing';
         HomeComponent,
         LoginComponent,
         PageNotFoundComponent,
+        UserEditComponent,
         AboutComponent
     ],
     imports: [

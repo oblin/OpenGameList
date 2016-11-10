@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var http_1 = require('@angular/http');
 var Observable_1 = require('rxjs/Observable');
 var auth_http_1 = require('./auth.http');
 var ItemService = (function () {
@@ -61,14 +60,14 @@ var ItemService = (function () {
      */
     ItemService.prototype.add = function (item) {
         var url = this.baseUrl;
-        return this.http.post(url, JSON.stringify(item), this.getRequestOptions())
+        return this.http.post(url, JSON.stringify(item), this.http.RequestOptionJsonType)
             .map(function (response) { return response.json(); })
             .catch(this.handleError);
     };
     // calls the [PUT] /api/items/ Web API method to update a existing item.
     ItemService.prototype.update = function (item) {
         var url = this.baseUrl + item.Id;
-        return this.http.put(url, JSON.stringify(item), this.getRequestOptions())
+        return this.http.put(url, JSON.stringify(item), this.http.RequestOptionJsonType)
             .map(function (response) { return response.json(); })
             .catch(this.handleError);
     };
@@ -81,17 +80,6 @@ var ItemService = (function () {
         var url = this.baseUrl + id;
         return this.http.delete(url)
             .catch(this.handleError);
-    };
-    /**
-     * Generate request headers
-     * @returns Headers: application/json
-     */
-    ItemService.prototype.getRequestOptions = function () {
-        return new http_1.RequestOptions({
-            headers: new http_1.Headers({
-                'Content-Type': 'application/json'
-            })
-        });
     };
     /**
      * 處理錯誤訊息，主要在 console.log 中紀錄

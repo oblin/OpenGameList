@@ -25,6 +25,7 @@ var item_detail_view_component_1 = require('./item-detail-view.component');
 var about_component_1 = require('./about.component');
 var home_component_1 = require('./home.component');
 var login_component_1 = require('./login.component');
+var user_edit_component_1 = require('./user-edit.component');
 var page_not_found_component_1 = require('./page-not-found.component');
 var app_routing_1 = require('./app.routing');
 var AppModule = (function () {
@@ -40,6 +41,7 @@ var AppModule = (function () {
                 home_component_1.HomeComponent,
                 login_component_1.LoginComponent,
                 page_not_found_component_1.PageNotFoundComponent,
+                user_edit_component_1.UserEditComponent,
                 about_component_1.AboutComponent
             ],
             imports: [

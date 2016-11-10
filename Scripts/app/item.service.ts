@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Response, Headers, RequestOptions } from '@angular/http';
+import { Response } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { AuthHttp } from './auth.http';
 import { Item } from './item';
@@ -51,7 +51,7 @@ export class ItemService {
     add(item: Item): Observable<Item> {
         let url = this.baseUrl;
         return this.http.post(url, JSON.stringify(item),
-                this.getRequestOptions())
+                this.http.RequestOptionJsonType)
             .map(response => <Item>response.json())
             .catch(this.handleError);
     }
@@ -60,7 +60,7 @@ export class ItemService {
     update(item: Item) {
         let url = this.baseUrl + item.Id;
         return this.http.put(url, JSON.stringify(item),
-                this.getRequestOptions())
+                this.http.RequestOptionJsonType)
             .map(response => response.json())
             .catch(this.handleError);
     }
@@ -74,18 +74,6 @@ export class ItemService {
         let url = this.baseUrl + id;
         return this.http.delete(url)
             .catch(this.handleError);
-    }
-
-    /**
-     * Generate request headers
-     * @returns Headers: application/json
-     */
-    private getRequestOptions() {
-        return new RequestOptions({
-            headers: new Headers({
-                'Content-Type': 'application/json'
-            })
-        });
     }
 
     /**
