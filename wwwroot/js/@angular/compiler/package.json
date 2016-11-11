@@ -10,7 +10,7 @@
         "spec": ">=2.1.0 <2.2.0",
         "type": "range"
       },
-      "F:\\Working\\OpenGameList"
+      "C:\\Users\\yimin\\Source\\Repos\\OpenGameList"
     ]
   ],
   "_from": "@angular/compiler@>=2.1.0 <2.2.0",
@@ -45,7 +45,7 @@
   "_shasum": "bd2a6c558de5350bdd43aa8e8de757943ac01d2a",
   "_shrinkwrap": null,
   "_spec": "@angular/compiler@~2.1.0",
-  "_where": "F:\\Working\\OpenGameList",
+  "_where": "C:\\Users\\yimin\\Source\\Repos\\OpenGameList",
   "author": {
     "name": "angular"
   },
