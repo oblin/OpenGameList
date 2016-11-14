@@ -41,6 +41,11 @@ namespace OpenGameList
             services.AddSingleton<Microsoft.Extensions.Configuration.IConfiguration>(c => { return Configuration; });
             // Add framework services.
             services.AddMvc();
+            // Add localhost CORS support
+            services.AddCors(options => 
+                options.AddPolicy("AllowLocalhost",
+                    builder => builder.WithOrigins("http://localhost")
+                        .AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
 
             // Add EntityFramework's Identity support
             services.AddEntityFramework();

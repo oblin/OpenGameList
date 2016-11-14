@@ -30,7 +30,10 @@ export class ItemService {
         let url = this.baseUrl + 'GetRandom/';
         if (num != null) { url += num; }
         return this.http.get(url)
-                   .map(response => response.json())
+                   .map(response => {
+                       console.log('Get result: ', response.json());
+                       return <Item[]>response.json();
+                    })
                    .catch(this.handleError);
     }
 
@@ -39,7 +42,10 @@ export class ItemService {
         if (id == null) { throw new Error('id is required.'); }
         let url = this.baseUrl + id;
         return this.http.get(url)
-                   .map(response => <Item>response.json())
+                   .map(response => {
+                       console.log(response.json());
+                       return <Item>response.json();
+                    })
                    .catch(this.handleError);
     }
 
